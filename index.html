@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SafeVoice - Anonymous Reporting Portal</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4faff;
+    color: #17324d;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 240px;
+    height: 100vh;
+    background: white;
+    border-right: 1px solid #dcecf5;
+    padding: 25px 18px;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: #168bd3;
+    margin-bottom: 45px;
+}
+
+.logo span {
+    color: #17324d;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.menu button {
+    border: none;
+    background: transparent;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: left;
+    font-size: 15px;
+    color: #536b7d;
+    cursor: pointer;
+}
+
+.menu button:hover,
+.menu button.active {
+    background: #e7f6ff;
+    color: #087fc4;
+    font-weight: bold;
+}
+
+/* ================= MAIN ================= */
+
+.main {
+    margin-left: 240px;
+    padding: 35px;
+    min-height: 100vh;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.topbar h1 {
+    font-size: 28px;
+}
+
+.badge {
+    background: #e5f6ff;
+    color: #087fc4;
+    padding: 9px 15px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+/* ================= PAGES ================= */
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+/* ================= CARD ================= */
+
+.card {
+    background: white;
+    border-radius: 18px;
+    padding: 28px;
+    border: 1px solid #e1f1fa;
+    box-shadow: 0 5px 20px rgba(38, 130, 180, 0.08);
+    margin-bottom: 25px;
+}
+
+.card h2 {
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #718798;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+/* ================= FORM ================= */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #cfe5f2;
+    border-radius: 10px;
+    outline: none;
+    background: #fbfdff;
+    font-size: 14px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #2196d3;
+    box-shadow: 0 0 0 3px #e5f6ff;
+}
+
+textarea {
+    height: 150px;
+    resize: vertical;
+}
+
+/* ================= ANONYMOUS ================= */
+
+.anonymous-box {
+    background: #eff9ff;
+    padding: 17px;
+    border-radius: 12px;
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.anonymous-box input {
+    width: auto;
+    margin-top: 3px;
+}
+
+.anonymous-box strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.anonymous-box small {
+    color: #687f91;
+}
+
+/* ================= BUTTON ================= */
+
+.primary-btn {
+    margin-top: 22px;
+    background: #168bd3;
+    color: white;
+    border: none;
+    padding: 14px 25px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.primary-btn:hover {
+    background: #0877b7;
+}
+
+/* ================= AI ANALYSIS ================= */
+
+.ai-analysis-box {
+    margin-top: 25px;
+    padding: 22px;
+    border-radius: 16px;
+    background: #f5fbff;
+    border: 1px solid #d7edf8;
+}
+
+.ai-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.ai-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: #dff4ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 23px;
+}
+
+.ai-header h3 {
+    margin-bottom: 4px;
+    color: #168bd3;
+}
+
+.ai-header p {
+    font-size: 13px;
+    color: #718798;
+}
+
+.ai-results {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.ai-result-card {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    border: 1px solid #e1f1fa;
+}
+
+.ai-result-card span,
+.ai-summary span {
+    display: block;
+    font-size: 12px;
+    color: #718798;
+    margin-bottom: 8px;
+}
+
+.ai-result-card strong {
+    color: #168bd3;
+}
+
+.ai-summary {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    margin-top: 15px;
+    border: 1px solid #e1f1fa;
+}
+
+.ai-summary p {
+    color: #40596b;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* ================= SUCCESS ================= */
+
+.success-box {
+    display: none;
+    background: #ecfff5;
+    border: 1px solid #bcebd2;
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.success-box h3 {
+    color: #168957;
+    margin-bottom: 12px;
+}
+
+.report-code {
+    background: white;
+    border: 2px dashed #168bd3;
+    color: #087fc4;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 23px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin: 15px 0;
+}
+
+/* ================= TRACK ================= */
+
+.track-search {
+    display: flex;
+    gap: 12px;
+}
+
+.track-search input {
+    flex: 1;
+}
+
+/* ================= STATUS ================= */
+
+.status-container {
+    margin-top: 30px;
+}
+
+.status-line {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.status-line::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 5%;
+    right: 5%;
+    height: 4px;
+    background: #dcebf3;
+    z-index: 0;
+}
+
+.status-step {
+    text-align: center;
+    width: 20%;
+    position: relative;
+    z-index: 1;
+}
+
+.circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #dcebf3;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+
+.status-step.completed .circle {
+    background: #168bd3;
+}
+
+.status-step.current .circle {
+    background: #38bdf8;
+    box-shadow: 0 0 0 5px #dff5ff;
+}
+
+.status-step p {
+    font-size: 12px;
+    margin-top: 10px;
+    color: #657b8c;
+}
+
+/* ================= ADMIN ================= */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    padding: 22px;
+    border-radius: 15px;
+    border: 1px solid #e0f0f8;
+}
+
+.stat-card h2 {
+    color: #168bd3;
+    margin-bottom: 5px;
+}
+
+.stat-card p {
+    color: #718798;
+    font-size: 13px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #e8f1f5;
+    font-size: 13px;
+}
+
+th {
+    color: #4d6576;
+    background: #f5fbff;
+}
+
+.status {
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    background: #e8f6ff;
+    color: #087fc4;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width: 800px) {
+
+    .sidebar {
+        width: 190px;
+    }
+
+    .main {
+        margin-left: 190px;
+        padding: 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .ai-results {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     SIDEBAR
+================================================== -->
+
+<div class="sidebar">
+
+    <div class="logo">
+        🛡️ Safe<span>Voice</span>
+    </div>
+
+    <div class="menu">
+
+        <button
+            class="active"
+            onclick="showPage('report', this)">
+            📝 File Report
+        </button>
+
+        <button
+            onclick="showPage('track', this)">
+            🔍 Track Analysis
+        </button>
+
+        <button
+            onclick="showPage('admin', this)">
+            📊 Admin Workspace
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     MAIN
+================================================== -->
+
+<div class="main">
+
+
+<!-- ==================================================
+     FILE REPORT
+================================================== -->
+
+<section
+    id="report"
+    class="page active">
+
+
+    <div class="topbar">
+
+        <h1>
+            File a Report
+        </h1>
+
+        <div class="badge">
+            🔒 Privacy Focused
+        </div>
+
+    </div>
+
+
+
+    <div class="card">
+
+
+        <h2>
+            Submit a Report
+        </h2>
+
+        <p class="subtitle">
+            Tell us what happened. Your information will be handled securely.
+        </p>
+
+
+
+        <form id="reportForm">
+
+
+            <div class="form-grid">
+
+
+                <!-- NAME -->
+
+                <div class="form-group">
+
+                    <label>
+                        Student Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="studentName"
+                        placeholder="Enter your name"
+                        required>
+
+                </div>
+
+
+
+                <!-- DEPARTMENT -->
+
+                <div class="form-group">
+
+                    <label>
+                        Department
+                    </label>
+
+                    <select
+                        id="department"
+                        required>
+
+                        <option value="">
+                            Select Department
+                        </option>
+
+                        <option>
+                            Information Technology
+                        </option>
+
+                        <option>
+                            Computer Science
+                        </option>
+
+                        <option>
+                            Artificial Intelligence & Data Science
+                        </option>
+
+                        <option>
+                            Electronics & Communication
+                        </option>
+
+                        <option>
+                            Electrical & Electronics
+                        </option>
+
+                        <option>
+                            Mechanical
+                        </option>
+
+                        <option>
+                            Civil
+                        </option>
+
+                        <option>
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- LOCATION -->
+
+                <div class="form-group">
+
+                    <label>
+                        Location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="location"
+                        placeholder="Example: College Campus"
+                        required>
+
+                </div>
+
+
+
+                <!-- DATE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="incidentDate"
+                        required>
+
+                </div>
+
+
+
+                <!-- INCIDENT TYPE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Incident Type
+                    </label>
+
+                    <select
+                        id="incidentType"
+                        required>
+
+                        <option value="">
+                            Select Incident Type
+                        </option>
+
+                        <option>
+                            Verbal Harassment
+                        </option>
+
+                        <option>
+                            Bullying
+                        </option>
+
+                        <option>
+                            Cyber Harassment
+                        </option>
+
+                        <option>
+                            Physical Harassment
+                        </option>
+
+                        <option>
+                            Discrimination
+                        </option>
+
+                        <option>
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- DETAILS -->
+
+                <div class="form-group full">
+
+                    <label>
+                        Comprehensive Incident Details
+                    </label>
+
+                    <textarea
+                        id="details"
+                        placeholder="Describe the incident in your own words..."
+                        required></textarea>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ==================================================
+                 AI ANALYSIS
+            ================================================== -->
+
+            <div class="ai-analysis-box">
+
+
+                <div class="ai-header">
+
+                    <span class="ai-icon">
+                        🤖
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            AI Incident Analysis
+                        </h3>
+
+                        <p>
+                            Automatic analysis to help organize the report.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="ai-results">
+
+
+                    <div class="ai-result-card">
+
+                        <span>
+                            Incident Category
+                        </span>
+
+                        <strong id="aiCategory">
+                            Waiting for analysis...
+                        </strong>
+
+                    </div>
+
+
+
+                    <div class="ai-result-card">
+
+                        <span>
+                            Priority Level
+                        </span>
+
+                        <strong id="aiPriority">
+                            Waiting for analysis...
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <div class="ai-summary">
+
+                    <span>
+                        AI Summary
+                    </span>
+
+                    <p id="aiSummary">
+
+                        Submit the report to generate an analysis.
+
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ==================================================
+                 ANONYMOUS
+            ================================================== -->
+
+            <div class="anonymous-box">
+
+
+                <input
+                    type="checkbox"
+                    id="anonymous">
+
+
+                <div>
+
+                    <strong>
+                        Submit Anonymously
+                    </strong>
+
+                    <small>
+
+                        Your identity will not be displayed
+                        in the report.
+
+                        A unique Report ID will still be
+                        generated for tracking.
+
+                    </small>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- SUBMIT BUTTON -->
+
+            <button
+                type="submit"
+                class="primary-btn">
+
+                🔐 Submit Secure Report
+
+            </button>
+
+
+        </form>
+
+
+
+        <!-- ==================================================
+             SUCCESS MESSAGE
+        ================================================== -->
+
+        <div
+            class="success-box"
+            id="successBox">
+
+
+            <h3>
+                ✓ Report Submitted Successfully
+            </h3>
+
+
+            <p>
+                Your report has been securely registered.
+            </p>
+
+
+            <div
+                class="report-code"
+                id="reportCode">
+
+                SV-000000
+
+            </div>
+
+
+            <p>
+
+                <strong>
+                    Important:
+                </strong>
+
+                Save this unique Report ID.
+
+                Use it in
+                <b>
+                    Track Analysis
+                </b>
+                to check your report status.
+
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ==================================================
+     TRACK ANALYSIS
+================================================== -->
+
+<section
+    id="track"
+    class="page">
+
+
+    <div class="topbar">
+
+        <h1>
+            Track Analysis
+        </h1>
+
+        <div class="badge">
+            🔎 Report Tracking
+        </div>
+
+    </div>
+
+
+
+    <div class="card">
+
+
+        <h2>
+            Track Your Report
+        </h2>
+
+
+        <p class="subtitle">
+
+            Enter your unique Report ID to check
+            the current status.
+
+        </p>
+
+
+
+        <div class="track-search">
+
+
+            <input
+                type="text"
+                id="trackCode"
+                placeholder="Example: SV-123456">
+
+
+            <button
+                class="primary-btn"
+                style="margin-top:0"
+                onclick="trackReport()">
+
+                Track Report
+
+            </button>
+
+
+        </div>
+
+
+
+        <!-- TRACK RESULT -->
+
+        <div
+            id="trackResult"
+            style="display:none">
+
+
+            <div
+                class="card"
+                style="margin-top:25px">
+
+
+                <h3 id="trackTitle">
+                    Report Status
+                </h3>
+
+
+                <p
+                    class="subtitle"
+                    id="trackInfo">
+                </p>
+
+
+
+                <div class="status-container">
+
+
+                    <div class="status-line">
+
+
+                        <div
+                            class="status-step completed"
+                            id="step1">
+
+                            <div class="circle">
+                                ✓
+                            </div>
+
+                            <p>
+                                Submitted
+                            </p>
+
+                        </div>
+
+
+
+                        <div
+                            class="status-step"
+                            id="step2">
+
+                            <div class="circle">
+                                2
+                            </div>
+
+                            <p>
+                                Verified
+                            </p>
+
+                        </div>
+
+
+
+                        <div
+                            class="status-step"
+                            id="step3">
+
+                            <div class="circle">
+                                3
+                            </div>
+
+                            <p>
+                                Under Review
+                            </p>
+
+                        </div>
+
+
+
+                        <div
+                            class="status-step"
+                            id="step4">
+
+                            <div class="circle">
+                                4
+                            </div>
+
+                            <p>
+                                Action Taken
+                            </p>
+
+                        </div>
+
+
+
+                        <div
+                            class="status-step"
+                            id="step5">
+
+                            <div class="circle">
+                                5
+                            </div>
+
+                            <p>
+                                Resolved
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- NOT FOUND -->
+
+        <div
+            id="notFound"
+            style="display:none;
+            margin-top:20px;
+            color:#d9534f">
+
+            Report ID not found.
+            Please check the code and try again.
+
+        </div>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- ==================================================
+     ADMIN WORKSPACE
+================================================== -->
+
+<section
+    id="admin"
+    class="page">
+
+
+    <div class="topbar">
+
+
+        <h1>
+            Admin Workspace
+        </h1>
+
+
+        <div class="badge">
+            🛡️ Admin Dashboard
+        </div>
+
+
+    </div>
+
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats">
+
+
+        <div class="stat-card">
+
+            <h2 id="totalReports">
+                0
+            </h2>
+
+            <p>
+                Total Reports
+            </p>
+
+        </div>
+
+
+
+        <div class="stat-card">
+
+            <h2 id="newReports">
+                0
+            </h2>
+
+            <p>
+                New Reports
+            </p>
+
+        </div>
+
+
+
+        <div class="stat-card">
+
+            <h2 id="reviewReports">
+                0
+            </h2>
+
+            <p>
+                Under Review
+            </p>
+
+        </div>
+
+
+
+        <div class="stat-card">
+
+            <h2 id="resolvedReports">
+                0
+            </h2>
+
+            <p>
+                Resolved
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- TABLE -->
+
+    <div class="card">
+
+
+        <h2>
+            Complaint Reports
+        </h2>
+
+
+        <p class="subtitle">
+            Secure administrative view
+        </p>
+
+
+
+        <table>
+
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Report ID
+                    </th>
+
+                    <th>
+                        Department
+                    </th>
+
+                    <th>
+                        Incident Type
+                    </th>
+
+                    <th>
+                        Date
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+
+            <tbody id="reportTable">
+
+            </tbody>
+
+
+        </table>
+
+
+    </div>
+
+
+</section>
+
+
+</div>
+
+
+
+<script>
+
+
+/* ==================================================
+   PAGE NAVIGATION
+================================================== */
+
+function showPage(pageId, button) {
+
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page => {
+
+            page.classList.remove("active");
+
+        });
+
+
+    document
+        .getElementById(pageId)
+        .classList.add("active");
+
+
+    document
+        .querySelectorAll(".menu button")
+        .forEach(btn => {
+
+            btn.classList.remove("active");
+
+        });
+
+
+    button.classList.add("active");
+
+
+    updateDashboard();
+
+}
+
+
+
+/* ==================================================
+   GENERATE UNIQUE REPORT ID
+================================================== */
+
+function generateReportID() {
+
+
+    const number =
+        Math.floor(
+            100000 +
+            Math.random() * 900000
+        );
+
+
+    return "SV-" + number;
+
+}
+
+
+
+/* ==================================================
+   AI INCIDENT ANALYSIS
+================================================== */
+
+function analyzeIncident(text) {
+
+
+    const lowerText =
+        text.toLowerCase();
+
+
+    let category =
+        "General Concern";
+
+
+    let priority =
+        "Low";
+
+
+
+    /* CYBER HARASSMENT */
+
+    if (
+
+        lowerText.includes("online") ||
+        lowerText.includes("message") ||
+        lowerText.includes("instagram") ||
+        lowerText.includes("whatsapp") ||
+        lowerText.includes("social media") ||
+        lowerText.includes("facebook")
+
+    ) {
+
+        category =
+            "Cyber Harassment";
+
+    }
+
+
+
+    /* BULLYING */
+
+    else if (
+
+        lowerText.includes("bully") ||
+        lowerText.includes("threat") ||
+        lowerText.includes("intimidat")
+
+    ) {
+
+        category =
+            "Bullying / Threat";
+
+    }
+
+
+
+    /* PHYSICAL */
+
+    else if (
+
+        lowerText.includes("physical") ||
+        lowerText.includes("hit") ||
+        lowerText.includes("attack")
+
+    ) {
+
+        category =
+            "Physical Harassment";
+
+    }
+
+
+
+    /* DISCRIMINATION */
+
+    else if (
+
+        lowerText.includes("discriminat") ||
+        lowerText.includes("caste")
+
+    ) {
+
+        category =
+            "Discrimination";
+
+    }
+
+
+
+    /* VERBAL */
+
+    else if (
+
+        lowerText.includes("verbal") ||
+        lowerText.includes("abuse") ||
+        lowerText.includes("insult")
+
+    ) {
+
+        category =
+            "Verbal Harassment";
+
+    }
+
+
+
+    /* HIGH PRIORITY */
+
+    if (
+
+        lowerText.includes("threat") ||
+        lowerText.includes("attack") ||
+        lowerText.includes("danger") ||
+        lowerText.includes("unsafe") ||
+        lowerText.includes("violence")
+
+    ) {
+
+        priority =
+            "High";
+
+    }
+
+
+
+    /* MEDIUM PRIORITY */
+
+    else if (
+
+        lowerText.includes("repeated") ||
+        lowerText.includes("bully") ||
+        lowerText.includes("harass") ||
+        lowerText.includes("abuse")
+
+    ) {
+
+        priority =
+            "Medium";
+
+    }
+
+
+
+    /* SUMMARY */
+
+    const summary =
+        "The report has been classified as " +
+        category +
+        " with a " +
+        priority.toLowerCase() +
+        " priority level. " +
+        "The submitted information can be reviewed by the authorized administrator.";
+
+
+
+    /* SHOW RESULT */
+
+    document
+        .getElementById("aiCategory")
+        .innerText =
+        category;
+
+
+    document
+        .getElementById("aiPriority")
+        .innerText =
+        priority;
+
+
+    document
+        .getElementById("aiSummary")
+        .innerText =
+        summary;
+
+
+    return {
+
+        category:
+            category,
+
+        priority:
+            priority,
+
+        summary:
+            summary
+
+    };
+
+}
+
+
+
+/* ==================================================
+   SUBMIT REPORT
+================================================== */
+
+document
+    .getElementById("reportForm")
+    .addEventListener(
+        "submit",
+        function(event) {
+
+
+            event.preventDefault();
+
+
+
+            /* GET VALUES */
+
+            const name =
+                document
+                .getElementById(
+                    "studentName"
+                )
+                .value
+                .trim();
+
+
+            const department =
+                document
+                .getElementById(
+                    "department"
+                )
+                .value;
+
+
+            const location =
+                document
+                .getElementById(
+                    "location"
+                )
+                .value
+                .trim();
+
+
+            const date =
+                document
+                .getElementById(
+                    "incidentDate"
+                )
+                .value;
+
+
+            const incidentType =
+                document
+                .getElementById(
+                    "incidentType"
+                )
+                .value;
+
+
+            const details =
+                document
+                .getElementById(
+                    "details"
+                )
+                .value
+                .trim();
+
+
+            const anonymous =
+                document
+                .getElementById(
+                    "anonymous"
+                )
+                .checked;
+
+
+
+            /* VALIDATION */
+
+            if (
+
+                !name ||
+                !department ||
+                !location ||
+                !date ||
+                !incidentType ||
+                !details
+
+            ) {
+
+
+                alert(
+                    "Please complete all required fields."
+                );
+
+
+                return;
+
+            }
+
+
+
+            /* AI ANALYSIS */
+
+            const aiResult =
+                analyzeIncident(
+                    details
+                );
+
+
+
+            /* UNIQUE REPORT ID */
+
+            const reportID =
+                generateReportID();
+
+
+
+            /* REPORT OBJECT */
+
+            const report = {
+
+
+                id:
+                    reportID,
+
+
+                name:
+                    anonymous
+                    ? "Anonymous"
+                    : name,
+
+
+                department:
+                    department,
+
+
+                location:
+                    location,
+
+
+                date:
+                    date,
+
+
+                incidentType:
+                    incidentType,
+
+
+                details:
+                    details,
+
+
+                anonymous:
+                    anonymous,
+
+
+                aiCategory:
+                    aiResult.category,
+
+
+                aiPriority:
+                    aiResult.priority,
+
+
+                aiSummary:
+                    aiResult.summary,
+
+
+                status:
+                    "Verified",
+
+
+                createdAt:
+                    new Date()
+                    .toISOString()
+
+
+            };
+
+
+
+            /* GET OLD REPORTS */
+
+            let reports =
+                JSON.parse(
+
+                    localStorage
+                    .getItem(
+                        "safeVoiceReports"
+                    )
+
+                ) || [];
+
+
+
+            /* ADD REPORT */
+
+            reports.push(
+                report
+            );
+
+
+
+            /* SAVE REPORT */
+
+            localStorage.setItem(
+
+                "safeVoiceReports",
+
+                JSON.stringify(
+                    reports
+                )
+
+            );
+
+
+
+            /* SHOW SUCCESS */
+
+            document
+                .getElementById(
+                    "reportCode"
+                )
+                .innerText =
+                reportID;
+
+
+            document
+                .getElementById(
+                    "successBox"
+                )
+                .style.display =
+                "block";
+
+
+
+            /* RESET */
+
+            document
+                .getElementById(
+                    "reportForm"
+                )
+                .reset();
+
+
+
+            /* UPDATE ADMIN */
+
+            updateDashboard();
+
+
+        }
+    );
+
+
+
+/* ==================================================
+   TRACK REPORT
+================================================== */
+
+function trackReport() {
+
+
+    const code =
+        document
+        .getElementById(
+            "trackCode"
+        )
+        .value
+        .trim()
+        .toUpperCase();
+
+
+
+    const reports =
+        JSON.parse(
+
+            localStorage
+            .getItem(
+                "safeVoiceReports"
+            )
+
+        ) || [];
+
+
+
+    const report =
+        reports.find(
+
+            item =>
+                item.id === code
+
+        );
+
+
+
+    const result =
+        document
+        .getElementById(
+            "trackResult"
+        );
+
+
+
+    const notFound =
+        document
+        .getElementById(
+            "notFound"
+        );
+
+
+
+    /* NOT FOUND */
+
+    if (!report) {
+
+
+        result.style.display =
+            "none";
+
+
+        notFound.style.display =
+            "block";
+
+
+        return;
+
+    }
+
+
+
+    /* FOUND */
+
+    notFound.style.display =
+        "none";
+
+
+    result.style.display =
+        "block";
+
+
+
+    document
+        .getElementById(
+            "trackTitle"
+        )
+        .innerText =
+        "Report " +
+        report.id;
+
+
+
+    document
+        .getElementById(
+            "trackInfo"
+        )
+        .innerText =
+        "Current Status: " +
+        report.status;
+
+
+
+    updateStatusSteps(
+        report.status
+    );
+
+}
+
+
+
+/* ==================================================
+   UPDATE STATUS
+================================================== */
+
+function updateStatusSteps(
+    status
+) {
+
+
+    const steps = [
+
+        "Submitted",
+        "Verified",
+        "Under Review",
+        "Action Taken",
+        "Resolved"
+
+    ];
+
+
+
+    let currentIndex =
+        steps.indexOf(
+            status
+        );
+
+
+
+    if (
+        currentIndex < 0
+    ) {
+
+        currentIndex = 1;
+
+    }
+
+
+
+    for (
+        let i = 0;
+        i < steps.length;
+        i++
+    ) {
+
+
+        const step =
+            document
+            .getElementById(
+                "step" +
+                (i + 1)
+            );
+
+
+
+        step.classList.remove(
+
+            "completed",
+
+            "current"
+
+        );
+
+
+
+        if (
+            i < currentIndex
+        ) {
+
+
+            step.classList.add(
+                "completed"
+            );
+
+
+        }
+
+
+        else if (
+            i === currentIndex
+        ) {
+
+
+            step.classList.add(
+                "current"
+            );
+
+
+        }
+
+    }
+
+}
+
+
+
+/* ==================================================
+   ADMIN DASHBOARD
+================================================== */
+
+function updateDashboard() {
+
+
+    const reports =
+        JSON.parse(
+
+            localStorage
+            .getItem(
+                "safeVoiceReports"
+            )
+
+        ) || [];
+
+
+
+    /* TOTAL */
+
+    document
+        .getElementById(
+            "totalReports"
+        )
+        .innerText =
+        reports.length;
+
+
+
+    /* NEW */
+
+    const newCount =
+        reports.filter(
+
+            r =>
+                r.status ===
+                "Verified"
+
+        ).length;
+
+
+
+    /* REVIEW */
+
+    const reviewCount =
+        reports.filter(
+
+            r =>
+                r.status ===
+                "Under Review"
+
+        ).length;
+
+
+
+    /* RESOLVED */
+
+    const resolvedCount =
+        reports.filter(
+
+            r =>
+                r.status ===
+                "Resolved"
+
+        ).length;
+
+
+
+    document
+        .getElementById(
+            "newReports"
+        )
+        .innerText =
+        newCount;
+
+
+
+    document
+        .getElementById(
+            "reviewReports"
+        )
+        .innerText =
+        reviewCount;
+
+
+
+    document
+        .getElementById(
+            "resolvedReports"
+        )
+        .innerText =
+        resolvedCount;
+
+
+
+    /* TABLE */
+
+    const table =
+        document
+        .getElementById(
+            "reportTable"
+        );
+
+
+
+    table.innerHTML = "";
+
+
+
+    reports.forEach(
+        report => {
+
+
+            const row =
+                document
+                .createElement(
+                    "tr"
+                );
+
+
+
+            row.innerHTML = `
+
+                <td>
+                    <strong>
+                        ${report.id}
+                    </strong>
+                </td>
+
+                <td>
+                    ${report.department}
+                </td>
+
+                <td>
+                    ${report.incidentType}
+                </td>
+
+                <td>
+                    ${report.date}
+                </td>
+
+                <td>
+                    <span class="status">
+                        ${report.status}
+                    </span>
+                </td>
+
+            `;
+
+
+
+            table.appendChild(
+                row
+            );
+
+        }
+    );
+
+}
+
+
+
+/* ==================================================
+   INITIAL LOAD
+================================================== */
+
+updateDashboard();
+
+</script>
+
+</body>
+</html>
